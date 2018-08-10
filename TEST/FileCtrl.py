@@ -71,3 +71,17 @@ class FileCtrl(wx.ListCtrl):
             self.SetColumnWidth( colIndex, wx.LIST_AUTOSIZE )
 
         self.DeleteItem( self.GetItemCount() - 1 )
+        """
+        If any one filename is very long the column width was set too long and
+          occupies "too much" width in the control causing little or no display
+          of the folder paths to be shown.
+
+        Set first row's width to no more than 50% of the control's client width.
+        This is a "reasonable" balance which leaves both columns's data
+           at least 50% displayed at all times.
+        """
+        firstColMaxWid = self.GetClientSize()[ 0 ] / 2      # Half the avaiable width.
+        firstColIndex = 0                           # Avoid the use of "Magic Numbers".
+        firstColActualWid = self.GetColumnWidth( firstColIndex )
+        reasonableWid = min( firstColMaxWid, firstColActualWid )
+        self.SetColumnWidth( firstColIndex, reasonableWid )
