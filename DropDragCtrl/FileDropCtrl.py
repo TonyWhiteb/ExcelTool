@@ -144,22 +144,23 @@ class FileListCtrl(wx.ListCtrl):
         for idx in range(self.numCols):
             assert(isinstance(rowDataTuple[idx],(bytes,str))),'One or both data elements are not strings.'
 
-        rowDataTupleTruncated = tuple(rowDataTuple[:self.numCols])
-        if (rowDataTupleTruncated not in self.entriesList):
+        self.rowDataTupleTruncated = tuple(rowDataTuple[:self.numCols])
+        if (self.rowDataTupleTruncated not in self.entriesList):
 
             if (not self.haveEntries):
                 self.DeleteAllItems()
 
-            self.Append(rowDataTupleTruncated)
-            self.entriesList.append(rowDataTupleTruncated)
+            self.Append(self.rowDataTupleTruncated)
+            print(self.rowDataTupleTruncated)
+            self.entriesList.append(self.rowDataTupleTruncated)
             self.numEntries += 1
             self.haveEntries = True
 
             self.Autosize()
     def Autosize(self):
 
-        self.Append(self.headerLabelList)
-        for colIndex in range( len( self.headerLabelList ) ) :
+        self.Append(self.rowDataTupleTruncated)
+        for colIndex in range( len( self.rowDataTupleTruncated ) ) :
             self.SetColumnWidth( colIndex, wx.LIST_AUTOSIZE )
 
         self.DeleteItem( self.GetItemCount() - 1 )
