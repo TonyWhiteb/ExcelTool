@@ -53,3 +53,7 @@ class FilesDropTarget(wx.FileDropTarget):
 
             # Call the callback function with the processed drop data.
             self.targetControl.dropFunc( filenameDropDict )
+        
+       # HIGHL: 
+        # How to add a function dynamically
+        

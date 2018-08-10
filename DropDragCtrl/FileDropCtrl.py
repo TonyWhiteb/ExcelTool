@@ -47,67 +47,69 @@ class FileListCtrl(wx.ListCtrl):
 
             assert(self.numEntries == len(self.entriesList))
 
-            allSelectedRowData = self.GetAllSelectedRowData()
+            self.DeleteItem(self.currRow)
 
-    def GetAllSelectedRowData(self):
-        allSelectedRowData = []
-        idx = -1
-        while True: #while True loop forever
-            idx = self.GetNextItem(idx,wx.LIST_NEXT_ALL, wx.LIST_STATE_SELECTED)
-            #Searches for an item with the given geometry or state,starting from item but excluding the item itself
-            #if item is -1, the first item that matches the specified flags will be returned.
-            #Return the first item with given state following item or -1 if no such item found.
-            if (idx == -1):
-                break
+    #         allSelectedRowData = self.GetAllSelectedRowData()
 
-            allSelectedRowData.append( self.GetItemInfo(idx))
+    # def GetAllSelectedRowData(self):
+    #     allSelectedRowData = []
+    #     idx = -1
+    #     while True: #while True loop forever
+    #         idx = self.GetNextItem(idx,wx.LIST_NEXT_ALL, wx.LIST_STATE_SELECTED)
+    #         #Searches for an item with the given geometry or state,starting from item but excluding the item itself
+    #         #if item is -1, the first item that matches the specified flags will be returned.
+    #         #Return the first item with given state following item or -1 if no such item found.
+    #         if (idx == -1):
+    #             break
 
-            if (len( allSelectedRowData ) >= 1) :
+    #         allSelectedRowData.append( self.GetItemInfo(idx))
 
-                #-----
+    #         if (len( allSelectedRowData ) >= 1) :
 
-                rawRowData = allSelectedRowData[ 0 ]    # There can be only a single row selected.
-                lineIdx       = rawRowData[ 0 ]
-                unknownData   = rawRowData[ 1 ]
-                textDataTuple = tuple( rawRowData[ 2: ] )   # Make same type as in self.entriesList
+    #             #-----
 
-                if self.numEntries :
+    #             rawRowData = allSelectedRowData[ 0 ]    # There can be only a single row selected.
+    #             lineIdx       = rawRowData[ 0 ]
+    #             unknownData   = rawRowData[ 1 ]
+    #             textDataTuple = tuple( rawRowData[ 2: ] )   # Make same type as in self.entriesList
 
-                    try :
-                        entryListIndex = None
-                        entryListIndex = self.entriesList.index( textDataTuple )
-                    except ValueError :
-                        print ('####  ERROR:  textDataTuple NOT FOUND in self.entriesList :')
-                        print (' ', textDataTuple)
-                        print
+    #             if self.numEntries :
 
-                        return
-                        #-----
+    #                 try :
+    #                     entryListIndex = None
+    #                     entryListIndex = self.entriesList.index( textDataTuple )
+    #                 except ValueError :
+    #                     print ('####  ERROR:  textDataTuple NOT FOUND in self.entriesList :')
+    #                     print (' ', textDataTuple)
+    #                     print
 
-                    #end try
+    #                     return
+    #                     #-----
 
-                    # Delete this row item from [ self.entriesList ].
-                    del self.entriesList[ entryListIndex ]
+    #                 #end try
 
-                    # Update the status vars.
-                    self.numEntries -= 1
-                    if (self.numEntries < 1) :
+    #                 # Delete this row item from [ self.entriesList ].
+    #                 del self.entriesList[ entryListIndex ]
 
-                        self.haveEntries = False
-                        self.Append( self.HelpTextTuple )
+    #                 # Update the status vars.
+    #                 self.numEntries -= 1
+    #                 if (self.numEntries < 1) :
 
-                    # Finally, detete the textList row item.
-                    self.DeleteItem( self.currRow )
-    def GetItemInfo(self,idx):
-        rowItemList = []
-        rowItemList.append(idx)
-        rowItemList.append(self.GetItemData(idx)) #Gets the application-defined data associated with this item
-        rowItemList.append(self.GetItemText(idx)) #gets the item text for this item, Column 0 is the default
+    #                     self.haveEntries = False
+    #                     self.Append( self.HelpTextTuple )
 
-        for i in range(1,self.GetColumnCount()):
-            rowItemList.append(self.GetItem(idx, i).GetText())
+    #                 # Finally, detete the textList row item.
+    #                 self.DeleteItem( self.currRow )
+    # def GetItemInfo(self,idx):
+    #     rowItemList = []
+    #     rowItemList.append(idx)
+    #     rowItemList.append(self.GetItemData(idx)) #Gets the application-defined data associated with this item
+    #     rowItemList.append(self.GetItemText(idx)) #gets the item text for this item, Column 0 is the default
 
-        return rowItemList
+    #     for i in range(1,self.GetColumnCount()):
+    #         rowItemList.append(self.GetItem(idx, i).GetText())
+
+    #     return rowItemList
     #
     #
     #
@@ -260,7 +262,9 @@ class FileDropCtrl(wx.Panel):
 
     def SetCallbackFunc(self, dropCallbacFunc = None ):
         self.filesDropTarget.SetDropTarget(ddt.FilesDropTarget(self.filesDropTarget))
-
+        # HIGHL:
+        # SetDropTarget() is a attribute of wx.windows
+        # Put list control object in file drop target class to create a file drop target object
         self.filesDropTarget.dropFunc = dropCallbacFunc
 
     def WriteHeaderLabels( self, headerLabelList ) :
