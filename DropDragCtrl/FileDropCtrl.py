@@ -289,14 +289,15 @@ class FileDropCtrl(wx.Panel):
 
         # Widen the header-list-as-row-data in order to completely show the column labels.
         # This hack works very well !
-        hdrListWidened = headerLabelList
-        for i in range( len( hdrListWidened ) ) :
-            hdrListWidened[ i ] += ' '     # Estimated number of spaces needed
-                                            #   to fully show the header.
-        # Delete the header-list-as-row-data.
-        self.filesListCtrl.Append( hdrListWidened )   # Does NOT add to item/row data list.
-        numRows = self.filesListCtrl.GetItemCount()
-        self.filesListCtrl.DeleteItem( numRows - 1 )
+        # hdrListWidened = headerLabelList
+        # for i in range( len( hdrListWidened ) ) :
+        #     hdrListWidened[ i ] += ' '     # Estimated number of spaces needed
+        #                                     #   to fully show the header.
+        # # Delete the header-list-as-row-data.
+        # self.filesListCtrl.Append( hdrListWidened )   # Does NOT add to item/row data list.
+        # numRows = self.filesListCtrl.GetItemCount()
+        # self.filesListCtrl.DeleteItem( numRows - 1 )
+        #HIGHL: No influence ?
     def WriteHelptext( self, helpText='Drop Files and Folders Here' ) :
         """ Write a message to be erased on the first file drop. """
 
