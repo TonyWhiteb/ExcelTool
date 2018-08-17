@@ -6,7 +6,7 @@ class FileCtrl(wx.ListCtrl):
 
         self.currRow = None
 
-        self.Bind(wx.EVT_LEFT_DOWN, self.OnFindCurrentRow )
+        # self.Bind(wx.EVT_LEFT_DOWN, self.OnFindCurrentRow )
         # self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
         self.entriesList = []
         self.numEntries = 0

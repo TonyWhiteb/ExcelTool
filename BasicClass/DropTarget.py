@@ -1,20 +1,10 @@
-import sys,os
 import wx
 
-class FilesDropTarget(wx.FileDropTarget):
+class DropTarget(wx.FileDropTarget):
     def __init__(self,targetControl):
         self.targetControl = targetControl
 
         wx.FileDropTarget.__init__(self)
-        # self.targetControl = targetControl
-
-    # def FileContentDropDict(self):
-
-    #     filecontentDropDict = {}
-    #     filecontentDropDict['filename'] = []
-    #     filecontentDropDict['colname'] = []
-
-    #     return filecontentDropDict
 
     def FilenameDropDict(self):
 
@@ -28,6 +18,7 @@ class FilesDropTarget(wx.FileDropTarget):
         filenameDropDict['ErrorFile'] = []
 
         return filenameDropDict
+
     def OnDropFiles(self, xOrd, yOrd, pathList):
 
         pathname, _ignored = os.path.split(pathList[0])
@@ -56,4 +47,3 @@ class FilesDropTarget(wx.FileDropTarget):
         
        # HIGHL: 
         # How to add a function dynamically
-        
