@@ -18,4 +18,6 @@ class Appframe(wx.Frame):
         
         wx.StaticText(self, -1 "Any files and links",(10,1))
         self.filedropctrl = FC.FileCtrl(panel,pos = (10,15), size = (50,200),style = wx.LC_REPORT|wx.BORDER_SUNKEN)
+        self.filedropctrl.InsertColumn(0,'File or Link Name')
+        self.filedropctrl.InsertColumn(1,'Parent Path')
 
