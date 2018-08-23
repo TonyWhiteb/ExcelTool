@@ -11,7 +11,7 @@ class MyTarget(wx.TextDropTarget):
 class Mywin(wx.Frame): 
             
    def __init__(self, parent, title): 
-      super(Mywin, self).__init__(parent, title = title,size = (-1,300))   
+      super(Mywin, self).__init__(parent, title = title,size = (650,300))   
 
       panel = wx.Panel(self) 
       box = wx.BoxSizer(wx.HORIZONTAL)  
