@@ -13,6 +13,7 @@ class FileCtrl(wx.ListCtrl):
         self.filename = []
         self.numCols = -1
         self.haveEntries = False
+        self.dropfunc = None
 
     def OnFindCurrentRow(self,event): #find current row control
         if (self.currRow is not None):
@@ -85,3 +86,4 @@ class FileCtrl(wx.ListCtrl):
         firstColActualWid = self.GetColumnWidth( firstColIndex )
         reasonableWid = min( firstColMaxWid, firstColActualWid )
         self.SetColumnWidth( firstColIndex, reasonableWid )
+    

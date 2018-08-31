@@ -1,4 +1,5 @@
 import wx
+import os,sys
 
 class DropTarget(wx.FileDropTarget):
     def __init__(self,targetControl):
