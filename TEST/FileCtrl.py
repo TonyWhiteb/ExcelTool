@@ -11,7 +11,7 @@ class FileCtrl(wx.ListCtrl):
         self.entriesList = []
         self.numEntries = 0
         self.filename = []
-        self.numCols = -1
+        self.numCols = 2
         self.haveEntries = False
         self.dropfunc = None
 
@@ -45,20 +45,21 @@ class FileCtrl(wx.ListCtrl):
             self.DeleteItem(self.currRow)
     
     def WriteTextTuple(self, rowDataTuple):
-
+        
         assert(len(rowDataTuple) >= self.numCols), 'Given data must have at least %d items.' %(self.numCols)
 
         for idx in range(self.numCols):
             assert(isinstance(rowDataTuple[idx],(bytes,str))),'One or both data elements are not strings.'
-
-        self.rowDataTupleTruncated = tuple(rowDataTuple[:self.numCols])
+        # print(rowDataTuple[:self.numCols])
+        self.rowDataTupleTruncated = tuple(rowDataTuple[:self.numCols])``
         if (self.rowDataTupleTruncated not in self.entriesList):
 
             if (not self.haveEntries):
                 self.DeleteAllItems()
 
             self.Append(self.rowDataTupleTruncated)
-            print(self.rowDataTupleTruncated)
+            
+            # print(self.rowDataTupleTruncated)
             self.entriesList.append(self.rowDataTupleTruncated)
             self.numEntries += 1
             self.haveEntries = True

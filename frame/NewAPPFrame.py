@@ -53,6 +53,7 @@ class AppFrame(wx.Frame):
         panel.Fit()
         # self.srcFileHelpText = 'Put '
         self.Centre()
+
         self.Show()
     
     def OnFilesDropped(self, filenameDropDict):
@@ -72,11 +73,13 @@ class AppFrame(wx.Frame):
 
                     _ParentPath, basename = os.path.split(aPath)
                     textTuple = (basename,commonPathname)
+                    # print(textTuple)
                     self.filedropctrl.WriteTextTuple(textTuple)
 
     
     def OnListColButton(self,event):
         print('Click Successfully!')
+        self.filedropctrl.GetInfo()
         pass
 
 class ButtonPanel(wx.Panel):

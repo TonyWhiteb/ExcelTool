@@ -41,7 +41,7 @@ class AppFrame(wx.Frame):
         headerLabelList = [ 'File or Link Name', 'Parent Path' ]
         self.filedropctrl.WriteHeaderLabels( headerLabelList )
 
-        srcFilesHelpText = '111'
+        srcFilesHelpText = 'Drop Files and Links Here'
         self.filedropctrl.WriteHelptext( srcFilesHelpText )
 
         onButtonHandlers = self.OnListColButton
@@ -116,7 +116,7 @@ class AppFrame(wx.Frame):
         new_frame = lcc.ListColFrame(big_dict,self.file_path)
         list_ctrl = new_frame.ListColInfo(big_dict)
         new_frame.Show()
-        # print(big_dict)
+        print(big_dict)
 
 
 

@@ -7,11 +7,11 @@ class FileCtrl(wx.ListCtrl):
         self.currRow = None
 
         self.Bind(wx.EVT_LEFT_DOWN, self.OnFindCurrentRow )
-        # self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
+        self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightDown)
         self.entriesList = []
         self.numEntries = 0
         self.filename = []
-        self.numCols = -1
+        self.numCols = 2
         self.haveEntries = False
 
     def OnFindCurrentRow(self,event): #find current row control
@@ -41,7 +41,21 @@ class FileCtrl(wx.ListCtrl):
 
             assert(self.numEntries == len(self.entriesList))
 
+            # self.DeleteItem(self.currRow)
+
+            idx = -1
+            idx = self.GetNextItem(idx,wx.LIST_NEXT_ALL,wx.LIST_STATE_SELECTED)
+            print(self.entriesList)
+            del self.entriesList[idx]
+            print(self.entriesList)
+            
+            self.numEntries -=1
+            if (self.numEntries < 1):
+                self.haveEntries = False
+                helpTextTuple = (' '*40, 'Drop Files and Folders Here')
+                self.Append(helpTextTuple)
             self.DeleteItem(self.currRow)
+            
     
     def WriteTextTuple(self, rowDataTuple):
 
@@ -85,3 +99,8 @@ class FileCtrl(wx.ListCtrl):
         firstColActualWid = self.GetColumnWidth( firstColIndex )
         reasonableWid = min( firstColMaxWid, firstColActualWid )
         self.SetColumnWidth( firstColIndex, reasonableWid )
+    
+    def GetInfo(self):
+        print(self.entriesList)
+        pass
+

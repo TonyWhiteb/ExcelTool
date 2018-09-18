@@ -47,8 +47,6 @@ class FileListCtrl(wx.ListCtrl):
 
             assert(self.numEntries == len(self.entriesList))
 
-            # self.DeleteItem(self.currRow)
-
             allSelectedRowData = self.GetAllSelectedRowData()
 
     def GetAllSelectedRowData(self):
@@ -108,10 +106,10 @@ class FileListCtrl(wx.ListCtrl):
 
         for i in range(1,self.GetColumnCount()):
             rowItemList.append(self.GetItem(idx, i).GetText())
-        print(rowItemList)
+
         return rowItemList
-    
-    
+    #
+    #
     #
     def GetAllfiles(self):
         assert(len(self.entriesList) == self.numEntries)
@@ -144,23 +142,22 @@ class FileListCtrl(wx.ListCtrl):
         for idx in range(self.numCols):
             assert(isinstance(rowDataTuple[idx],(bytes,str))),'One or both data elements are not strings.'
 
-        self.rowDataTupleTruncated = tuple(rowDataTuple[:self.numCols])
-        if (self.rowDataTupleTruncated not in self.entriesList):
+        rowDataTupleTruncated = tuple(rowDataTuple[:self.numCols])
+        if (rowDataTupleTruncated not in self.entriesList):
 
             if (not self.haveEntries):
                 self.DeleteAllItems()
 
-            self.Append(self.rowDataTupleTruncated)
-            # print(self.rowDataTupleTruncated)
-            self.entriesList.append(self.rowDataTupleTruncated)
+            self.Append(rowDataTupleTruncated)
+            self.entriesList.append(rowDataTupleTruncated)
             self.numEntries += 1
             self.haveEntries = True
 
             self.Autosize()
     def Autosize(self):
 
-        self.Append(self.rowDataTupleTruncated)
-        for colIndex in range( len( self.rowDataTupleTruncated ) ) :
+        self.Append(self.headerLabelList)
+        for colIndex in range( len( self.headerLabelList ) ) :
             self.SetColumnWidth( colIndex, wx.LIST_AUTOSIZE )
 
         self.DeleteItem( self.GetItemCount() - 1 )
@@ -263,9 +260,7 @@ class FileDropCtrl(wx.Panel):
 
     def SetCallbackFunc(self, dropCallbacFunc = None ):
         self.filesDropTarget.SetDropTarget(ddt.FilesDropTarget(self.filesDropTarget))
-        # HIGHL:
-        # SetDropTarget() is a attribute of wx.windows
-        # Put list control object in file drop target class to create a file drop target object
+
         self.filesDropTarget.dropFunc = dropCallbacFunc
 
     def WriteHeaderLabels( self, headerLabelList ) :
@@ -289,15 +284,14 @@ class FileDropCtrl(wx.Panel):
 
         # Widen the header-list-as-row-data in order to completely show the column labels.
         # This hack works very well !
-        # hdrListWidened = headerLabelList
-        # for i in range( len( hdrListWidened ) ) :
-        #     hdrListWidened[ i ] += ' '     # Estimated number of spaces needed
-        #                                     #   to fully show the header.
-        # # Delete the header-list-as-row-data.
-        # self.filesListCtrl.Append( hdrListWidened )   # Does NOT add to item/row data list.
-        # numRows = self.filesListCtrl.GetItemCount()
-        # self.filesListCtrl.DeleteItem( numRows - 1 )
-        #HIGHL: No influence ?
+        hdrListWidened = headerLabelList
+        for i in range( len( hdrListWidened ) ) :
+            hdrListWidened[ i ] += ' '     # Estimated number of spaces needed
+                                            #   to fully show the header.
+        # Delete the header-list-as-row-data.
+        self.filesListCtrl.Append( hdrListWidened )   # Does NOT add to item/row data list.
+        numRows = self.filesListCtrl.GetItemCount()
+        self.filesListCtrl.DeleteItem( numRows - 1 )
     def WriteHelptext( self, helpText='Drop Files and Folders Here' ) :
         """ Write a message to be erased on the first file drop. """
 
