@@ -47,6 +47,7 @@ class FilesDropTarget(wx.FileDropTarget):
 
         filenameDropDict['ExcelFile'] = [s for s in basenameList if '.xlsx' in s]
         filenameDropDict['ErrorFile'] = [s for s in basenameList if '.error' in s]
+        # print(filenameDropDict)
 
         if (hasattr( self.targetControl, 'dropFunc' ))  and  \
            (self.targetControl.dropFunc != None) :

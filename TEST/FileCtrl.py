@@ -42,7 +42,67 @@ class FileCtrl(wx.ListCtrl):
 
             assert(self.numEntries == len(self.entriesList))
 
-            self.DeleteItem(self.currRow)
+            allSelectedRowData = self.GetAllSelectedRowData()
+
+    def GetAllSelectedRowData(self):
+        allSelectedRowData = []
+        idx = -1
+        while True: #while True loop forever
+            idx = self.GetNextItem(idx,wx.LIST_NEXT_ALL, wx.LIST_STATE_SELECTED)
+            #Searches for an item with the given geometry or state,starting from item but excluding the item itself
+            #if item is -1, the first item that matches the specified flags will be returned.
+            #Return the first item with given state following item or -1 if no such item found.
+            if (idx == -1):
+                break
+
+            allSelectedRowData.append( self.GetItemInfo(idx))
+
+            if (len( allSelectedRowData ) >= 1) :
+
+                #-----
+
+                rawRowData = allSelectedRowData[ 0 ]    # There can be only a single row selected.
+                lineIdx       = rawRowData[ 0 ]
+                unknownData   = rawRowData[ 1 ]
+                textDataTuple = tuple( rawRowData[ 2: ] )   # Make same type as in self.entriesList
+
+                if self.numEntries :
+
+                    try :
+                        entryListIndex = None
+                        entryListIndex = self.entriesList.index( textDataTuple )
+                    except ValueError :
+                        print ('####  ERROR:  textDataTuple NOT FOUND in self.entriesList :')
+                        print (' ', textDataTuple)
+                        print
+
+                        return
+                        #-----
+
+                    #end try
+
+                    # Delete this row item from [ self.entriesList ].
+                    del self.entriesList[ entryListIndex ]
+
+                    # Update the status vars.
+                    self.numEntries -= 1
+                    if (self.numEntries < 1) :
+
+                        self.haveEntries = False
+                        self.Append( self.HelpTextTuple )
+
+                    # Finally, detete the textList row item.
+                    self.DeleteItem( self.currRow )
+    def GetItemInfo(self,idx):
+        rowItemList = []
+        rowItemList.append(idx)
+        rowItemList.append(self.GetItemData(idx)) #Gets the application-defined data associated with this item
+        rowItemList.append(self.GetItemText(idx)) #gets the item text for this item, Column 0 is the default
+
+        for i in range(1,self.GetColumnCount()):
+            rowItemList.append(self.GetItem(idx, i).GetText())
+
+        return rowItemList
     
     def WriteTextTuple(self, rowDataTuple):
         
@@ -51,7 +111,7 @@ class FileCtrl(wx.ListCtrl):
         for idx in range(self.numCols):
             assert(isinstance(rowDataTuple[idx],(bytes,str))),'One or both data elements are not strings.'
         # print(rowDataTuple[:self.numCols])
-        self.rowDataTupleTruncated = tuple(rowDataTuple[:self.numCols])``
+        self.rowDataTupleTruncated = tuple(rowDataTuple[:self.numCols])
         if (self.rowDataTupleTruncated not in self.entriesList):
 
             if (not self.haveEntries):

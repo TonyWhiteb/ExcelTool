@@ -34,6 +34,7 @@ class AppFrame(wx.Frame):
         self.errorfile = []
         # create the basic panel and go to create first control
         self.filedropctrl = fdctrl.FileDropCtrl(frmPanel,size = (50,200), label='Any Files and Links :')
+        # print(type(self.filedropctrl))
         self.filedropctrl.SetName('AppFrame::self.filesDropCtrl')
         #Create the sub panel for list control
         self.filedropctrl.SetCallbackFunc(self.OnFilesDropped)
@@ -70,7 +71,7 @@ class AppFrame(wx.Frame):
     def OnFilesDropped(self, filenameDropDict):
 
         dropTarget = self.filedropctrl.GetDropTarget()
-
+        # print(dropTarget)
         dropCoord = filenameDropDict[ 'coord' ]                 # Not used as yet.
         pathList = filenameDropDict[ 'pathList' ]
         leafFolderList = filenameDropDict[ 'basenameList' ]     # leaf folders, not basenames !
@@ -80,19 +81,20 @@ class AppFrame(wx.Frame):
         if (os.name == 'nt')  and  (ntGetShortpathname != None) :
             if (len( commonPathname ) > 40) :             # Set an arbitrary max width.
                 commonPathname = ntGetShortpathname( commonPathname )
-
+        print(pathList)
         # Write (.append) a text 2-element list for each basename
         for aPath in pathList :     # May include folders.
-
+            
             # Keep just files and link files.
             if not os.path.isdir( aPath ) :
-
+                print(self.filesAndLinks)
                 if (aPath not in self.filesAndLinks) :
                     self.filesAndLinks.append( aPath )
 
                 _longFormParentPath, basename = os.path.split( aPath )
                 textTuple = (basename, commonPathname)
                 dropTarget.WriteTextTuple( textTuple )
+        # print(self.filesAndLinks)
 
 
 
@@ -111,14 +113,19 @@ class AppFrame(wx.Frame):
 
 
 
-    def OnListColButton(self, event):
-        big_dict = self.filedropctrl.GetInfo()
-        new_frame = lcc.ListColFrame(big_dict,self.file_path)
-        list_ctrl = new_frame.ListColInfo(big_dict)
-        new_frame.Show()
-        # print(big_dict)
+    # def OnListColButton(self, event):
+    #     big_dict = self.filedropctrl.GetInfo()
+    #     new_frame = lcc.ListColFrame(big_dict,self.file_path)
+    #     list_ctrl = new_frame.ListColInfo(big_dict)
+    #     new_frame.Show()
+    #     # print(big_dict)
 
-
+    def OnListColButton(self,event):
+        print('Click Successfully!')
+        # self.filedropctrl.GetInfo()
+        # print(self.filedropctrl.GetEntriesList())
+        print(self.filesAndLinks)
+        pass
 
 #
 #

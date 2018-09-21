@@ -28,10 +28,14 @@ class AppFrame(wx.Frame):
         self.filedropctrl = FC.FileCtrl(panel,size = (550,300),style = wx.LC_REPORT|wx.BORDER_SUNKEN)
         self.filedropctrl.InsertColumn(0,'File or Link Name')
         self.filedropctrl.InsertColumn(1,'Parent Path')
+        self.filesDropTarget = self.filedropctrl
 
         
-        self.filesDropTarget = self.filedropctrl.SetDropTarget(DT.DropTarget(self.filedropctrl))
+        self.filedropctrl.SetDropTarget(DT.DropTarget(self.filedropctrl))
         self.filedropctrl.dropFunc = self.OnFilesDropped
+        # print(type(self.filedropctrl))
+        # print(type(self.filesDropTarget))
+        
         helpTextTuple = (' '*40, 'Drop Files and Folders Here')
         self.filedropctrl.Append(helpTextTuple)
         self.filedropctrl.SetColumnWidth(0, wx.LIST_AUTOSIZE)
@@ -57,7 +61,9 @@ class AppFrame(wx.Frame):
         self.Show()
     
     def OnFilesDropped(self, filenameDropDict):
-
+        # print('here!')
+        dropTarget = self.filedropctrl
+        # print(dropTarget)
         dropCoord = filenameDropDict[ 'coord' ]                 # Not used as yet.
         pathList = filenameDropDict[ 'pathList' ]
         leafFolderList = filenameDropDict[ 'basenameList' ]     # leaf folders, not basenames !
@@ -66,20 +72,25 @@ class AppFrame(wx.Frame):
         self.errorfile = filenameDropDict['ErrorFile']
 
         for aPath in pathList:
+            # print('here! 1')
             if not os.path.isdir(aPath):
-
+                # print(self.filesAndLinks)
                 if (aPath not in self.filesAndLinks):
                     self.filesAndLinks.append(aPath)
-
-                    _ParentPath, basename = os.path.split(aPath)
-                    textTuple = (basename,commonPathname)
-                    # print(textTuple)
-                    self.filedropctrl.WriteTextTuple(textTuple)
+                    # print('here! 3')
+                _ParentPath, basename = os.path.split(aPath)
+                textTuple = (basename,commonPathname)
+                dropTarget.WriteTextTuple( textTuple )
+                    # print('here! 4')
+        # print(self.filesAndLinks)
+                    # self.filedropctrl.WriteTextTuple(textTuple)
 
     
     def OnListColButton(self,event):
         print('Click Successfully!')
-        self.filedropctrl.GetInfo()
+        # self.filedropctrl.GetInfo()
+        # print(self.filedropctrl.dropFunc)
+        print(self.filesAndLinks)
         pass
 
 class ButtonPanel(wx.Panel):

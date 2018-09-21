@@ -108,7 +108,7 @@ class FileListCtrl(wx.ListCtrl):
 
         for i in range(1,self.GetColumnCount()):
             rowItemList.append(self.GetItem(idx, i).GetText())
-        print(rowItemList)
+        # print(rowItemList)
         return rowItemList
     
     
@@ -145,6 +145,9 @@ class FileListCtrl(wx.ListCtrl):
             assert(isinstance(rowDataTuple[idx],(bytes,str))),'One or both data elements are not strings.'
 
         self.rowDataTupleTruncated = tuple(rowDataTuple[:self.numCols])
+        # print(self.numCols)
+        # print(self.rowDataTupleTruncated)
+        # print(self.entriesList)
         if (self.rowDataTupleTruncated not in self.entriesList):
 
             if (not self.haveEntries):
@@ -153,10 +156,12 @@ class FileListCtrl(wx.ListCtrl):
             self.Append(self.rowDataTupleTruncated)
             # print(self.rowDataTupleTruncated)
             self.entriesList.append(self.rowDataTupleTruncated)
+            # print(self.entriesList)
             self.numEntries += 1
             self.haveEntries = True
 
             self.Autosize()
+    
     def Autosize(self):
 
         self.Append(self.rowDataTupleTruncated)
@@ -238,6 +243,7 @@ class FileDropCtrl(wx.Panel):
         self.filesListCtrl = FileListCtrl(self, fdcID, size= size, style = wx.LC_REPORT)
 
         self.filesDropTarget = self.filesListCtrl
+        # print(type(self.filesDropTarget))
 # Layout Control
         fdcPnl_vertSzr = wx.BoxSizer(wx.VERTICAL)
         fdcPnl_vertSzr.Add(fdcLabel, proportion = 0, flag = wx.EXPAND)
@@ -246,6 +252,10 @@ class FileDropCtrl(wx.Panel):
         fdcPnl_horzSzr.Add(fdcPnl_vertSzr, proportion =1, flag = wx.EXPAND)
 #
         self.SetSizer(fdcPnl_horzSzr) #Sets the window to have the given layout sizer
+
+    def GetEntriesList(self):
+        return self.filesListCtrl.numEntries
+
     def GetEntryList(self):
         return self.filesListCtrl.GetEntries()
     def GetAllRows(self):
@@ -263,6 +273,7 @@ class FileDropCtrl(wx.Panel):
 
     def SetCallbackFunc(self, dropCallbacFunc = None ):
         self.filesDropTarget.SetDropTarget(ddt.FilesDropTarget(self.filesDropTarget))
+        # print(type(self.filesDropTarget))
         # HIGHL:
         # SetDropTarget() is a attribute of wx.windows
         # Put list control object in file drop target class to create a file drop target object
