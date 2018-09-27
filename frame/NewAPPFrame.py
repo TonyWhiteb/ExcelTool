@@ -3,7 +3,7 @@ import wx
 
 from BasicClass import DropTarget as DT
 from BasicClass import FileCtrl as FC
-
+from frame import NewListFrame as NLF
 
 from collections import defaultdict
 
@@ -14,17 +14,18 @@ class AppFrame(wx.Frame):
 
         self.file_path = file_path
 
-        super(AppFrame,self).__init__(parent = None, id =-1, title = title, size = (600,400))
+        super(AppFrame,self).__init__(parent = None, id =-1, title = title, size = (800,600))
 
         self.filesAndLinks = list()
-
+        self.no_resize = wx.DEFAULT_FRAME_STYLE & ~ (wx.RESIZE_BORDER | 
+                                                # wx.RESIZE_BOX | 
+                                                wx.MAXIMIZE_BOX)
 
         self.SetBackgroundColour(wx.WHITE)
-        panel = wx.Panel(self)
-        box_h = wx.BoxSizer(wx.HORIZONTAL)
-        box_v = wx.BoxSizer(wx.VERTICAL)
+        panel = wx.Panel(self,-1)
+        
 
-        wx.StaticText(self, -1,"Any files and links",(10,1))
+        # wx.StaticText(self, -1,"Any files and links",(10,1))
         self.filedropctrl = FC.FileCtrl(panel,size = (550,300),style = wx.LC_REPORT|wx.BORDER_SUNKEN)
         self.filedropctrl.InsertColumn(0,'File or Link Name')
         self.filedropctrl.InsertColumn(1,'Parent Path')
@@ -42,15 +43,24 @@ class AppFrame(wx.Frame):
         self.filedropctrl.SetColumnWidth(1, wx.LIST_AUTOSIZE)
 
         onButtonHandlers = self.OnListColButton
-        self.buttonpnl = ButtonPanel(panel,onButtonHandlers= onButtonHandlers)
-
+        self.buttonpnl = ButtonPanel(panel,onButtonHandlers= onButtonHandlers,size = (-1,100),style= self.no_resize)
+        # self.buttonpnl.SetAutoLayout(True) 
+        # self.buttonpnl.SetSize(wx.Size(300,400)) 
+        # style = self.buttonpnl.GetWindowStyle()
+        # self.buttonpnl.SetWindowStyle(style & (~wx.CLOSE_BOX) & (~wx.MAXIMIZE_BOX))
+        # self.Refresh()
+        # listALL = wx.Button(self,-1,'List Columns')
+        box_h = wx.BoxSizer(wx.VERTICAL)
+        box_v = wx.BoxSizer(wx.HORIZONTAL)
         box_v.AddSpacer(25)
-        box_v.Add(self.filedropctrl,0)
-        box_v.Add(self.buttonpnl,1,wx.EXPAND)
+        box_v.Add(self.filedropctrl,0,wx.EXPAND)
+        box_v.AddSpacer(25)
+        box_v.Add(self.buttonpnl,0,wx.EXPAND)
+        # box_v.Add(listALL,0，wx.EXPAND)
 
         box_h.AddSpacer(20)
-        box_h.Add(box_v)
-        
+        box_h.Add(box_v,-1,wx.EXPAND)
+        box_h.AddSpacer(20)
 
 
         panel.SetSizer(box_h)
@@ -85,19 +95,26 @@ class AppFrame(wx.Frame):
         # print(self.filesAndLinks)
                     # self.filedropctrl.WriteTextTuple(textTuple)
 
-    
-    def OnListColButton(self,event):
-        print('Click Successfully!')
-        # self.filedropctrl.GetInfo()
-        # print(self.filedropctrl.dropFunc)
-        print(self.filesAndLinks)
-        pass
+    # def FrameStyle(self):
+        
+    # def OnListColButton(self,event):
+    #     print('Click Successfully!')
+    #     # self.filedropctrl.GetInfo()
+    #     # print(self.filedropctrl.dropFunc)
+    #     print(self.filesAndLinks)
+    #     pass
+    def OnListColButton(self, event):
+        # big_dict = self.filedropctrl.GetInfo()
+        col_dict = []
+        new_frame = NLF.NewListFrame(col_dict,self.file_path)
+        # list_ctrl = new_frame.ListColInfo(big_dict)
+        new_frame.Show()
 
 class ButtonPanel(wx.Panel):
 
-    def __init__(self,parent = None, id = -1, onButtonHandlers = None):
+    def __init__(self,parent = None, id = -1, onButtonHandlers = None,size = wx.DefaultSize,style = wx.DEFAULT_FRAME_STYLE):
 
-        super(ButtonPanel, self).__init__(parent = parent , id = id)
+        super(ButtonPanel, self).__init__(parent = parent , id = id,size = size, style = style)
 
         listALL = wx.Button(self,-1,'List Columns')
 

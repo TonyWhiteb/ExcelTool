@@ -113,19 +113,19 @@ class AppFrame(wx.Frame):
 
 
 
-    # def OnListColButton(self, event):
-    #     big_dict = self.filedropctrl.GetInfo()
-    #     new_frame = lcc.ListColFrame(big_dict,self.file_path)
-    #     list_ctrl = new_frame.ListColInfo(big_dict)
-    #     new_frame.Show()
-    #     # print(big_dict)
+    def OnListColButton(self, event):
+        big_dict = self.filedropctrl.GetInfo()
+        new_frame = lcc.ListColFrame(big_dict,self.file_path)
+        list_ctrl = new_frame.ListColInfo(big_dict)
+        new_frame.Show()
+        # print(big_dict)
 
-    def OnListColButton(self,event):
-        print('Click Successfully!')
-        # self.filedropctrl.GetInfo()
-        # print(self.filedropctrl.GetEntriesList())
-        print(self.filesAndLinks)
-        pass
+    # def OnListColButton(self,event):
+    #     print('Click Successfully!')
+    #     # self.filedropctrl.GetInfo()
+    #     # print(self.filedropctrl.GetEntriesList())
+    #     print(self.filesAndLinks)
+    #     pass
 
 #
 #
