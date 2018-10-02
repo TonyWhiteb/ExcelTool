@@ -15,6 +15,8 @@ class NewListFrame(wx.Frame):
 
         self.col_dict = col_dict
         self.file_path = file_path
+        self.filelist = []
+        self.filedict = {}
 
         self.list_ctrl = fc.FileCtrl(panel, size = (500,304),style = wx.LC_REPORT|wx.BORDER_SUNKEN)
         self.list_ctrl.InsertColumn(0,'Column Name')
@@ -42,7 +44,27 @@ class NewListFrame(wx.Frame):
         panel.Fit()
         self.Centre()
         self.Show()
-    
+
+    def ListColInfo(self,col_dict):
+        key_list = []
+        value_list =[]
+
+        for key, value in col_dict.items():
+            key_list.append(key)
+            value_list.append(value)
+        if len(key_list) == len(value_list):
+            for i in range(len(key_list)):
+                for k in value_list[i]:
+                    k_list =[]
+                    k_list.append(k)
+                    for j in range(len(k_list)) :
+                        self.list_ctrl.InsertItem(j,k_list[j])
+                        self.list_ctrl.SetItem(j,1,key_list[i])
+
+        self.Autosize()
+        self.filelist = key_list
+        self.filedict = self.filedict.fromkeys(key_list)
+        return self.list_ctrl
 
     def onSaveFile(self,event):
         pass
@@ -68,7 +90,7 @@ class NewListFrame(wx.Frame):
         #     column_name = list(set(column_name))
         #     df_final = pd.DataFrame(columns = column_name)
         #     for key in self.filedict:
-        #         df = pd.DataFrame.from_dict(self.big_dict[key])
+        #         df = pd.DataFrame.from_dict(self.col_dict[key])
         #         df_need = df.loc[:,self.filedict.get(key)]
         #         df_final = df_final.append(df_need)
         #     basename = os.path.split(path)

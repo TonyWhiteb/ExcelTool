@@ -15,8 +15,7 @@ class DropTarget(wx.FileDropTarget):
         filenameDropDict['pathname'] = ''
         filenameDropDict['basenameList'] = []
         filenameDropDict['FullPathList'] = []
-        filenameDropDict['ExcelFile'] = []
-        filenameDropDict['ErrorFile'] = []
+        filenameDropDict['filetype'] = []
 
         return filenameDropDict
 
@@ -25,10 +24,12 @@ class DropTarget(wx.FileDropTarget):
         pathname, _ignored = os.path.split(pathList[0])
 
         basenameList = []
-
+        filetypelist = []
         for aPath in pathList :
             _ignoredDir, aBasename = os.path.split(aPath)
             basenameList.append(aBasename)
+            point = aBasename.find('.')
+            filetypelist.append(aBasename[point:])
 
 
         filenameDropDict = self.FilenameDropDict()
@@ -36,10 +37,8 @@ class DropTarget(wx.FileDropTarget):
         filenameDropDict['pathList'] = pathList
         filenameDropDict['pathname'] = pathname
         filenameDropDict['basenameList'] = basenameList
-
-        filenameDropDict['ExcelFile'] = [s for s in basenameList if '.xlsx' in s]
-        filenameDropDict['ErrorFile'] = [s for s in basenameList if '.error' in s]
-        # print(basenameList)
+        filenameDropDict['filetype'] = filetypelist
+        # print(filenameDropDict)
 
         if (hasattr( self.targetControl, 'dropFunc' ))  and  \
            (self.targetControl.dropFunc != None) :

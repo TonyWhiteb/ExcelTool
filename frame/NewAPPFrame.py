@@ -29,6 +29,7 @@ class AppFrame(wx.Frame):
         self.filedropctrl = FC.FileCtrl(panel,size = (550,300),style = wx.LC_REPORT|wx.BORDER_SUNKEN)
         self.filedropctrl.InsertColumn(0,'File or Link Name')
         self.filedropctrl.InsertColumn(1,'Parent Path')
+        self.filedropctrl.InsertColumn(2,'File Type')
         self.filesDropTarget = self.filedropctrl
 
         
@@ -53,7 +54,7 @@ class AppFrame(wx.Frame):
         box_h = wx.BoxSizer(wx.VERTICAL)
         box_v = wx.BoxSizer(wx.HORIZONTAL)
         box_v.AddSpacer(25)
-        box_v.Add(self.filedropctrl,0,wx.EXPAND)
+        box_v.Add(self.filedropctrl,1,wx.EXPAND)
         box_v.AddSpacer(25)
         box_v.Add(self.buttonpnl,0,wx.EXPAND)
         # box_v.Add(listALL,0，wx.EXPAND)
@@ -78,19 +79,32 @@ class AppFrame(wx.Frame):
         pathList = filenameDropDict[ 'pathList' ]
         leafFolderList = filenameDropDict[ 'basenameList' ]     # leaf folders, not basenames !
         commonPathname = filenameDropDict[ 'pathname' ]
-        self.excelfile = filenameDropDict['ExcelFile']
-        self.errorfile = filenameDropDict['ErrorFile']
+        filetype = filenameDropDict['filetype']
+        # self.excelfile = filenameDropDict['ExcelFile']
+        # self.errorfile = filenameDropDict['ErrorFile']
+        for aPath in pathList :     # May include folders.
 
-        for aPath in pathList:
-            # print('here! 1')
-            if not os.path.isdir(aPath):
-                # print(self.filesAndLinks)
-                if (aPath not in self.filesAndLinks):
-                    self.filesAndLinks.append(aPath)
-                    # print('here! 3')
-                _ParentPath, basename = os.path.split(aPath)
-                textTuple = (basename,commonPathname)
+            # Keep just files and link files.
+            if not os.path.isdir( aPath ) :
+
+                if (aPath not in self.filesAndLinks) :
+                    self.filesAndLinks.append( aPath )
+
+                _ParentPath, basename = os.path.split( aPath )
+                namelist = basename.split('.')
+                afiletype = namelist[len(namelist)-1]
+                textTuple = (commonPathname, basename, afiletype)
                 dropTarget.WriteTextTuple( textTuple )
+        # for aPath in pathList:
+        #     # print('here! 1')
+        #     if not os.path.isdir(aPath):
+        #         # print(self.filesAndLinks)
+        #         if (aPath not in self.filesAndLinks):
+        #             self.filesAndLinks.append(aPath)
+        #             # print('here! 3')
+        #         _ParentPath, basename = os.path.split(aPath)
+        #         textTuple = (basename,commonPathname)
+        #         dropTarget.WriteTextTuple( textTuple )
                     # print('here! 4')
         # print(self.filesAndLinks)
                     # self.filedropctrl.WriteTextTuple(textTuple)
@@ -103,12 +117,37 @@ class AppFrame(wx.Frame):
     #     # print(self.filedropctrl.dropFunc)
     #     print(self.filesAndLinks)
     #     pass
+    def ListCol(self): 
+        pathlist = self.filedropctrl.GetEntries()
+        # listcol_error_meg = ''
+        self.col_dict = {}
+        type_list = []
+        path_list = []
+        name_list = []
+        print(pathlist)
+        for p,f,t in pathlist:
+            assert(t in self.filedropctrl.supportfiletype), "Not support for %s file" %(t)
+            # print(type(p))
+            # print(f)
+            # print(t)
+            path_list.append(p)
+            type_list.append(t)
+            name_list.append(f)
+        # print(path_list,type_list,name_list)   
+        num_errors = type_list.count('errors')
+        num_xlsx = type_list.count('xlsx')
+        num_sql = type_list.count('sql')
+
+        if len(type_list) == num_errors + num_xlsx:
+            return self.filedropctrl.GetInfo(pathlist,type_list,path_list,name_list)
+        else: 
+            raise Exception('Only support Excel or Error file!') 
+            # TODO: ErrorFrame here!
     def OnListColButton(self, event):
-        # big_dict = self.filedropctrl.GetInfo()
-        col_dict = []
-        new_frame = NLF.NewListFrame(col_dict,self.file_path)
-        # list_ctrl = new_frame.ListColInfo(big_dict)
-        new_frame.Show()
+        col_dict = self.ListCol()
+        ListCol_frame = NLF.NewListFrame(col_dict,self.file_path)
+        list_ctrl = ListCol_frame.ListColInfo(col_dict)
+        ListCol_frame.Show()
 
 class ButtonPanel(wx.Panel):
 
